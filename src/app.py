@@ -19,6 +19,15 @@ current_dir = Path(__file__).parent
 app.mount("/static", StaticFiles(directory=os.path.join(Path(__file__).parent,
           "static")), name="static")
 
+# School configuration - Configuração personalizável da escola
+school_info = {
+    "name": "Academia Excellence",
+    "year": "2024",
+    "subtitle": "Extracurricular Activities",
+    "description": "Uma instituição dedicada à excelência acadêmica e desenvolvimento integral dos estudantes",
+    "website": "https://academiaexcellence.edu"
+}
+
 # In-memory activity database
 activities = {
     "Chess Club": {
@@ -81,6 +90,30 @@ activities = {
 @app.get("/")
 def root():
     return RedirectResponse(url="/static/index.html")
+
+
+@app.get("/api/school-info")
+def get_school_info():
+    """Get school information including name, year, subtitle and additional details"""
+    return school_info
+
+
+@app.put("/api/school-info")
+def update_school_info(name: str = None, year: str = None, subtitle: str = None, 
+                      description: str = None, website: str = None):
+    """Update school information (optional endpoint for future admin functionality)"""
+    if name:
+        school_info["name"] = name
+    if year:
+        school_info["year"] = year
+    if subtitle:
+        school_info["subtitle"] = subtitle
+    if description:
+        school_info["description"] = description
+    if website:
+        school_info["website"] = website
+    
+    return {"message": "School information updated successfully", "data": school_info}
 
 
 @app.get("/activities")

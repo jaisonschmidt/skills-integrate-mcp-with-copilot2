@@ -4,6 +4,38 @@ document.addEventListener("DOMContentLoaded", () => {
   const signupForm = document.getElementById("signup-form");
   const messageDiv = document.getElementById("message");
 
+  // Function to fetch school information from API
+  async function fetchSchoolInfo() {
+    try {
+      const response = await fetch("/api/school-info");
+      const schoolInfo = await response.json();
+
+      // Update page title with school name and subtitle
+      document.getElementById("page-title").textContent = `${schoolInfo.name} - ${schoolInfo.subtitle}`;
+      
+      // Update header
+      document.getElementById("school-name").textContent = schoolInfo.name;
+      document.getElementById("school-subtitle").textContent = schoolInfo.subtitle;
+      
+      // Update footer with school name and year
+      document.getElementById("footer-text").textContent = `© ${schoolInfo.year} ${schoolInfo.name}`;
+      
+      // Add description if element exists (for future use)
+      const descriptionElement = document.getElementById("school-description");
+      if (descriptionElement && schoolInfo.description) {
+        descriptionElement.textContent = schoolInfo.description;
+      }
+      
+    } catch (error) {
+      console.error("Error fetching school info:", error);
+      // Fallback to default values
+      document.getElementById("page-title").textContent = "School Activities";
+      document.getElementById("school-name").textContent = "School Name";
+      document.getElementById("school-subtitle").textContent = "Extracurricular Activities";
+      document.getElementById("footer-text").textContent = "© 2024 School";
+    }
+  }
+
   // Function to fetch activities from API
   async function fetchActivities() {
     try {
@@ -156,5 +188,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Initialize app
+  fetchSchoolInfo();
   fetchActivities();
 });
